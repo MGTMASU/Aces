@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <style>
+            .main-dev{
+                width: 400px;
+                height: 300px;
+                position: absolute;
+                margin: auto;
+                top: 70px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        </style>
+        <title>Aces Home</title>
+        <script>
+
+        </script>
+    </head>
+    <body>
+        <div class="w3-bar w3-light-grey">
+          <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-xlarge"><b>Aces</b></a>
+          <a href={% url 'register' %} class="w3-bar-item w3-button w3-hover-teal w3-padding-16 w3-xlarge" style="float: right">Sign up</a>
+          {% if usrName == None %}
+                <a href="{% url 'main' %}" class="w3-bar-item w3-button w3-teal w3-padding-16 w3-xlarge" style="float: right">login</a>
+                <div class="main-dev">
+                    <form class="w3-container" method="post" action= {% url 'main' %}>
+                        {% csrf_token %}
+                        <label>User Name</label>
+                        <input class="w3-input " name="usrName" type="text">
+                        <br>
+                        <label>Password</label>
+                        <input class="w3-input" name="pswd" type="password">
+                        <button class="w3-btn w3-blue-grey"style="margin-top: 30px ; margin-right: 60% ; margin-left: 40%" type="submit" value="submit">login</button>
+                    </form>
+                </div>
+          {% elif usrName == 11%}
+                 <a href="{% url 'main' %}" class="w3-bar-item w3-button w3-teal w3-padding-16 w3-xlarge" style="float: right">login</a>
+                 <!-- Wrong user Name or Password -->
+                 <div class="main-dev">
+                    <form class="w3-container" method="post" action= {% url 'main' %}>
+                        {% csrf_token %}
+                        <label>User Name</label>
+                        <input class="w3-input " name="usrName" type="text">
+                        <br>
+                        <label>Password</label>
+                        <input class="w3-input" name="pswd" type="password">
+                        <button class="w3-btn w3-blue-grey"style="margin-top: 30px ; margin-right: 60% ; margin-left: 40%" type="submit" value="submit">login</button>
+                    </form>
+                    <div class="w3-panel w3-grey w3-display-container" style="height: 120px">
+                        <span onclick="this.parentElement.style.display='none'"
+                                    class="w3-button w3-display-topright">&times;</span>
+                        <h3>Error!</h3>
+                        <p>Username or Password is not Correct</p>
+                        <a href="{% url 'register' %}" class="w3-display-bottommiddle" style="margin-bottom: 10px">Do you want to Register !!</a>
+                    </div>
+                 </div>
+          {% else %}
+                <a href="{% url 'logOut' %}?usrName={{ usrName }}" class="w3-bar-item w3-button w3-hover-teal w3-padding-16 w3-xlarge" style="float: right">logout</a>
+                <p class="w3-bar-item w3-padding-16 w3-xlarge w3-text-teal" style="float: right ; margin-bottom: 0px">loged as : {{ usrName }} </p>
+                <div>
+                    <div class="main-dev">
+                        <p><b class="w3-large w3-text-teal w3-padding-16"> Name : </b> <span class="w3-large  w3-padding-16">&emsp;{{ name }}</span></p>
+                        <br>
+                        <p><b class="w3-large w3-text-teal w3-padding-16">  Phone : </b> <span class="w3-large w3-padding-16">&emsp;{{ phone }}</span></p>
+                        <br>
+                        <p><b class="w3-large w3-text-teal w3-padding-16">  Email : </b> <span class="w3-large w3-padding-16">&emsp;{{ email }}</span></p>
+                        <br>
+                        <p><b class="w3-large w3-text-teal w3-padding-16">  User Name : </b> <span class="w3-large w3-padding-16">&emsp;{{ usrName }}</span></p>
+                        <br>
+                        <p><b class="w3-large w3-text-teal w3-padding-16">  Password : </b> <span class="w3-large w3-padding-16">&emsp;{{ pswd }}</span></p>
+                    </div>
+                </div>
+          {% endif %}
+        </div>
+
+    </body>
+</html>
+

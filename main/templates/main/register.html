@@ -1,0 +1,263 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <style>
+            .main-dev{
+                width: 800px;
+                height: 300px;
+                position: absolute;
+                margin: auto;
+                margin-top: 50px;
+                right: 0;
+                left: 0;
+            }
+        </style>
+        <script>
+
+            var phone = false, usrName = false , pswd = false , name__ = false , email = false ;
+
+            function check() {
+
+                name__ = isNotEmpty('name');
+
+                if(isNotEmpty('phone')){
+                    if(!/^\d+$/.test(document.getElementById('phone').value)){
+                        document.getElementById('phone').style.borderColor='red';
+                        document.getElementById("phone_A").style.display="inline ";
+                        document.getElementById("phone_A").innerHTML="Not a valid Phone number ";
+                        phone = false;
+                    }else{
+                        if(document.getElementById('phone').value.length != 10){
+                            document.getElementById('phone').style.borderColor='red';
+                            document.getElementById("phone_A").style.display="inline ";
+                            document.getElementById("phone_A").innerHTML="Not a valid Phone number ";
+                            phone = false;
+                        }else{
+                            document.getElementById('phone').style.borderColor='white';
+                            document.getElementById("phone_A").style.display="None ";
+                            phone = true;
+                        }
+
+                    }
+                }else{
+                    phone = false;
+                }
+
+                if(isNotEmpty('email')){
+                    if(!validateEmail()){
+                        document.getElementById('email').style.borderColor='red';
+                        document.getElementById("email_A").style.display="inline ";
+                        document.getElementById("email_A").innerHTML="Not a valid Email ";
+                        email = false;
+                    }else{
+                        if(email){
+                            document.getElementById('email').style.borderColor='white';
+                            document.getElementById("email_A").style.display="None ";
+                        }else{
+                            document.getElementById('email').style.borderColor='red';
+                            document.getElementById("email_A").style.display="inline ";
+                            document.getElementById("email_A").innerHTML = 'this email is registered';
+                        }
+                    }
+                }
+
+{#                usrName &= isNotEmpty('usrName');#}
+                if(isNotEmpty('usrName')){
+                    if(!usrName){
+                        document.getElementById('usrName').style.borderColor='red';
+                        document.getElementById("usrName_A").style.display="inline ";
+                        document.getElementById("usrName_A").innerHTML = 'this Username is taken';
+                    }else{
+                        document.getElementById('usrName').style.borderColor='white';
+                        document.getElementById("usrName_A").style.display="None ";
+                    }
+                }else{
+                   usrName = false;
+                }
+                console.log(usrName);
+
+                pswd = isNotEmpty('pswd')&&isNotEmpty('pswd2');
+
+                if(isNotEmpty('pswd')){
+                    if(document.getElementById('pswd').value.length<6){
+                        pswd = false;
+                        document.getElementById('pswd').style.borderColor='red';
+                        document.getElementById('pswd_A').style.display='inline';
+                        document.getElementById("pswd_A").innerHTML="Password must be more than 6 Digits ";
+                    }else{
+                        document.getElementById('pswd').style.borderColor='white';
+                        if(document.getElementById('pswd').value != document.getElementById('pswd2').value){
+                            pswd = false;
+                            document.getElementById('pswd2').style.borderColor='red';
+                            document.getElementById('pswd2_A').style.display='inline';
+                            document.getElementById('pswd2_A').innerHTML='Passwords not the Same';
+                        }else{
+                            pswd = true;
+                            document.getElementById('pswd2_A').style.display='None';
+                            document.getElementById('pswd2').style.borderColor='white';
+                        }
+                    }
+                }
+            }
+
+            function validateEmail() {
+                var x = document.getElementById('email').value;
+                var atpos = x.indexOf("@");
+                var dotpos = x.lastIndexOf(".");
+                if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+
+            function isNotEmpty(element) {
+                var value = document.getElementById(element).value;
+                if(value == "" || value==" "){
+                    document.getElementById(element).style.borderColor = "red";
+                    document.getElementById(element+"_A").style.display="inherit ";
+                    document.getElementById(element+"_A").innerHTML="should't be empty ";
+                    return false;
+                }else{
+                     document.getElementById(element).style.borderColor = "white";
+                     document.getElementById(element+"_A").style.display="None ";
+                     return true;
+                }
+            }
+
+            function checkUsrName() {
+                var ajax = new XMLHttpRequest();
+                ajax.open("GET","{% url 'check' %}?usrName="+document.getElementById('usrName').value,true);
+                ajax.send();
+                ajax.onreadystatechange =  function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                         if(ajax.responseText == 'None'){
+                             document.getElementById('usrName').style.borderColor='white';
+                             document.getElementById("usrName_A").style.display="None ";
+                             usrName = true;
+                         }else{
+                             document.getElementById('usrName').style.borderColor='red';
+                             document.getElementById("usrName_A").style.display="inline ";
+                             document.getElementById("usrName_A").innerHTML = 'this Username is taken';
+                             usrName = false;
+                         }
+                    }
+                };
+            }
+
+            function checkMail() {
+                var ajax = new XMLHttpRequest();
+                ajax.open("GET","{% url 'e_check' %}?usrMail="+document.getElementById('email').value,true);
+                ajax.send();
+                ajax.onreadystatechange =  function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                         if(ajax.responseText == 'None'){
+                             document.getElementById('email').style.borderColor='white';
+                             document.getElementById("email_A").style.display="None ";
+                             email = true;
+                         }else{
+                             document.getElementById('email').style.borderColor='red';
+                             document.getElementById("email_A").style.display="inline ";
+                             document.getElementById("email_A").innerHTML = 'this email is registered';
+                             email = false;
+                         }
+                    }
+                };
+            }
+
+
+            function submit__() {
+                check();
+                console.log("phone "+phone);
+                console.log("usrName "+usrName);
+                console.log("pswd "+pswd);
+                console.log("name"+name__);
+                console.log("email"+email);
+                console.log(name__&&phone&&usrName&&pswd&&email);
+                if( name__&&phone&&usrName&&pswd&&email ){
+                    console.log("submitting");
+                    document.getElementById('registration').submit();
+                }
+            }
+        </script>
+        <title>Aces Registration</title>
+    </head>
+    <body>
+        <div class="w3-bar w3-light-grey">
+          <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-xlarge"><b>Aces</b></a>
+          <a href="#" class="w3-bar-item w3-button w3-teal w3-padding-16 w3-xlarge" style="float: right">Sign up</a>
+          <a href="{% url 'main' %}" class="w3-bar-item w3-button w3-hover-teal w3-padding-16 w3-xlarge" style="float: right">login</a>
+        </div>
+
+        <div class="main-dev">
+            <form class="w3-container" action="add" method="post" id = 'registration'>
+                {% csrf_token %}
+
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>First Name</label>
+                        <input class="w3-input" type="text" name="name" id="name">
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id="name_A" style="display: None">Error</p>
+                    </div>
+
+                </div>
+                <br>
+
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>Phone Number</label>
+                        <input class="w3-input" type="text" name="phone" id = "phone">
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id ='phone_A' style="display: None">Error</p>
+                    </div>
+                </div>
+                <br>
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>email</label>
+                        <input class="w3-input" type="email" name="email" id="email" oninput="checkMail()">
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id="email_A" style="display: None">Error</p>
+                    </div>
+                </div>
+                <br>
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>User Name</label>
+                        <input class="w3-input" type="text" name="usrName" id="usrName" oninput="checkUsrName()">
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id="usrName_A" style="display: None"></p>
+                    </div>
+                </div>
+                <br>
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>Password</label>
+                        <input class="w3-input" type="password" name = "pswrd" id = "pswd">
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id="pswd_A" style="display: None">Error</p>
+                    </div>
+                </div>
+                <br>
+                <div class="w3-container">
+                    <div class="w3-container" style="float: left; width: 80%" >
+                        <label>Password again</label>
+                        <input class="w3-input" type="password" id = 'pswd2'>
+                    </div>
+                    <div class="w3-container" style="float: right; width: 20% ; margin-top: 30px">
+                        <p id="pswd2_A" style="display: None">Error</p>
+                    </div>
+                </div>
+                <input class="w3-btn w3-blue-grey"style="margin-top: 30px ; margin-right: 60% ; margin-left: 40% " onclick= submit__() type="button" value="Register"/>
+            </form>
+        </div>
+
+    </body>
+</html>
